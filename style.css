@@ -1,0 +1,26 @@
+body {
+	resize: none;
+	overflow: hidden;
+}
+
+h1 {
+	font-size: 48px;
+}
+
+img {
+	height: 48px;
+	width: 48px;
+}
+
+#header {
+	width: 100%;
+	height: 72px;
+	border-bottom: solid 1px lightgray;
+}
+
+#ticker {
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	resize: none;
+}
