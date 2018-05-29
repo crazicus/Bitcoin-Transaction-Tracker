@@ -23,7 +23,7 @@ function(err, data) {
   if (err !== null) {
     alert('Something went wrong: ' + err);
   } else {
-    alert(data.usd.last);
+    alert(data.usd);
   }
 });
 
