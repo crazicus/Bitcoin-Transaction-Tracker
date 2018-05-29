@@ -1,6 +1,31 @@
 let btcs = new WebSocket("wss://ws.blockchain.info/inv");
 let conversion = 1;
 let unit = "BTC";
+let inUSD = false;
+
+let getJSON = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      let status = xhr.status;
+      if (status === 200) {
+        callback(null, xhr.response);
+      } else {
+        callback(status, xhr.response);
+      }
+    };
+    xhr.send();
+};
+
+getJSON("https://blockchain.info/ticker",
+function(err, data) {
+  if (err !== null) {
+    alert('Something went wrong: ' + err);
+  } else {
+    alert(data.usd.last);
+  }
+});
 
 btcs.onopen = function() {
 	btcs.send(JSON.stringify({"op":"unconfirmed_sub"}));
