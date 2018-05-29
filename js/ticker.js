@@ -24,6 +24,7 @@ function(err, data) {
     alert('Something went wrong: ' + err);
   } else {
     alert(data.USD.last);
+    console.log(data);
   }
 });
 
