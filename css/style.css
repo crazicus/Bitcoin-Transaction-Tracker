@@ -12,8 +12,9 @@ img {
 	width: 48px;
 }
 
-input:checked {
-	box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+#BTC {
+	background-color: #218838;
+	border-color: #1e7e34;
 }
 
 #header {
