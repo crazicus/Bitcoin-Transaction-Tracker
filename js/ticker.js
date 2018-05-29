@@ -1,6 +1,9 @@
 let btcs = new WebSocket("wss://ws.blockchain.info/inv");
+let radioBTC = document.getElementById("BTC");
+let radioUSD = document.getElementById("USD");
 let inUSD = false;
 let conversion = -1;
+let count = 1;
 
 let getJSON = function(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -26,13 +29,24 @@ function(err, data) {
   }
 });
 
-$('input[type=radio]').change( function() {
+radioBTC.onclick = function() {
 	if (inUSD) {
 		inUSD = false;
-   	} else if (conversion !== -1) {
-   		inUSD = true;
-   	}
-});
+		radioBTC.style.backgroundColor = "#218838";
+		radioBTC.style.borderColor = "#1e7e34";
+		radioUSD.style.backgroundColor = "#28a745";
+		radioUSD.style.borderColor = "#28a745";
+	}
+}
+radioUSD.onclick = function() {
+	if (!inUSD) {
+		inUSD = true;
+		radioUSD.style.backgroundColor = "#218838";
+		radioUSD.style.borderColor = "#1e7e34";
+		radioBTC.style.backgroundColor = "#28a745";
+		radioBTC.style.borderColor = "#28a745";
+	}
+}
 
 btcs.onopen = function() {
 	btcs.send(JSON.stringify({"op":"unconfirmed_sub"}));
@@ -55,23 +69,24 @@ btcs.onmessage = function(msg) {
 }
 
 function create(amt) {
-	let elem = document.createElement("div");
+	count++;
+	let elem = document.createElement("p");
 	const size = Math.log(amt+1.8) * 40;
-	let val = (inUSD)? (`$${amt*conversion}`) : `${amt}BTC`;
+	let val = (inUSD)? (`$${(amt*conversion).toFixed(2)}`) : `${amt}BTC`;
 	const node = document.createTextNode(val);
 	elem.appendChild(node);
 
-	const red = Math.max(0, 255-(Math.floor(Math.log(amt+1.8))*96));
-	const blue = Math.min(255, (Math.floor(Math.log(amt+1.8))*96));
-	const green = 0;
-	let top = (Math.random() * 80) + 15;
+	const red = Math.floor(Math.random() * 208);
+	const blue = Math.floor(Math.random() * 208);
+	const green = Math.floor(Math.random() * 208);
+	let top = (Math.random() * 75) + 15;
 	elem.style.fontSize = size + "px";
 	elem.style.color = `rgb(${red}, ${green}, ${blue}`;
 	elem.style.display = "inline-block";
 	elem.style.position = "absolute";
 	elem.style.top = `${top}%`;
-	elem.style.left = "-100%";
-	elem.style.width = "auto";
+	elem.style.right = `${window.innerWidth+10}px`;
+	elem.id = count;
 
 	let ticker = document.getElementById("ticker");
 	ticker.appendChild(elem);
@@ -80,17 +95,19 @@ function create(amt) {
 }
 
 function travel(elem) {
-	let per = -100;
-	let freq = (Math.random() * 1.5);
+	const w = window.innerWidth + 10;
+	console.log(w);
+	let per = w + 10;
+	const freq = (Math.random() * 5)+3;
 	let id = setInterval(frame, 20);
 	let ticker = document.getElementById("ticker");
 	function frame() {
-		if (per >= 200) {
+		if (per <= -1.25*w) {	
 			clearInterval(id);
 			ticker.removeChild(elem);
 		} else {
-			per += freq;
-			elem.style.left = `${per}%`;
+			per -= freq;
+			elem.style.right = `${per}px`;
 		}
 	}
 }
