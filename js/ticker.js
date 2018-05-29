@@ -26,16 +26,13 @@ function(err, data) {
   }
 });
 
-let radioBTC = document.getElementById("BTC");
-radioBTC.onclick = function() {
-	inUSD = false;
-}
-let radioUSD = document.getElementById("USD");
-radioUSD.onclick = function() {
-	if (conversion !== -1) {
-		inUSD = true;
-	}
-}
+$('input[type=radio]').change( function() {
+	if (inUSD) {
+		inUSD = false;
+   	} else if (conversion !== -1) {
+   		inUSD = true;
+   	}
+});
 
 btcs.onopen = function() {
 	btcs.send(JSON.stringify({"op":"unconfirmed_sub"}));
