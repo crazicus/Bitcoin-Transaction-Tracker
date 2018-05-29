@@ -1,7 +1,6 @@
 let btcs = new WebSocket("wss://ws.blockchain.info/inv");
-let conversion = 1;
-let unit = "BTC";
 let inUSD = false;
+let conversion = -1;
 
 let getJSON = function(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -21,12 +20,22 @@ let getJSON = function(url, callback) {
 getJSON("https://blockchain.info/ticker",
 function(err, data) {
   if (err !== null) {
-    alert('Something went wrong: ' + err);
+    console.log('Something went wrong: ' + err);
   } else {
-    alert(data.USD.last);
-    console.log(data);
+    conversion = data.USD.last;
   }
 });
+
+let radioBTC = document.getElementById("BTC");
+radioBTC.onclick = function() {
+	inUSD = false;
+}
+let radioUSD = document.getElementById("USD");
+radioUSD.onclick = function() {
+	if (conversion !== -1) {
+		inUSD = true;
+	}
+}
 
 btcs.onopen = function() {
 	btcs.send(JSON.stringify({"op":"unconfirmed_sub"}));
@@ -51,7 +60,8 @@ btcs.onmessage = function(msg) {
 function create(amt) {
 	let elem = document.createElement("div");
 	const size = Math.log(amt+1.8) * 40;
-	const node = document.createTextNode(amt*conversion + unit);
+	let val = (inUSD)? (`$${amt*conversion}`) : `${amt}BTC`;
+	const node = document.createTextNode(val);
 	elem.appendChild(node);
 
 	const red = Math.max(0, 255-(Math.floor(Math.log(amt+1.8))*96));
